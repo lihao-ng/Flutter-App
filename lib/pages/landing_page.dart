@@ -3,6 +3,7 @@ import './../models/Photo.dart';
 import './../lists/photoLists.dart';
 import './single_photo.dart';
 import 'package:dio/dio.dart';
+import 'dart:convert';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -21,46 +22,41 @@ class LandingPageState extends State<LandingPage> {
     _fetchData();
   }
   _fetchData() async {
-    // final url = "http://192.168.1.156/api/v1";
-    // var type = "POST";
-    
+  
+    var baseUrl = 'http://192.168.1.156/api/v1/ba/login';
+    var type = "POST";
+  
+    var dio = new Dio(new Options(
+      method: type,
+    headers: {
+      "client-id": "2",
+      "client-secret": "aKBmBHrotjlxBAFA9hRGyr1wjj3LKqobfX98uHRM"
+    },
+    data: {
+      "nric" : "112",
+      "ref_no": "23"
+    },
+    responseType: ResponseType.JSON
+  ));
 
-    // if (response.statusCode == 200) {
-      // photos = (json.decode(response.body) as List)
+  var data;
+
+  await dio.request(baseUrl, options: dio.options)
+  .then((result) {
+    data = result.data;
+      // photos = (result.data as List)
       //     .map((data) => new Photo.fromJson(data))
       //     .toList();
 
       // setState(() {
       //   _isLoading = false;
       // });
-    // }
-    var baseUrl = "https://jsonplaceholder.typicode.com/photos";
-    var type = "GET";
-  // final response = await http.get(apiUrl);
-  var dio = new Dio(new Options(
-    method: type,
-    headers: {
-      "client-id": "2",
-      "client-secret": "aKBmBHrotjlxBAFA9hRGyr1wjj3LKqobfX98uHRM"
-    },
-    // contentType: ContentType.json,
-    responseType: ResponseType.JSON
-  ));
-  Future<Response> response = await dio.request(baseUrl, options: dio.options)
-  .then((result) {
-    print(result.statusCode);
-    print(result.data);
-    
-      photos = (result.data as List)
-          .map((data) => new Photo.fromJson(data))
-          .toList();
-
-      setState(() {
-        _isLoading = false;
-      });
+      print(result.data);
   }, onError: (err) {
-    print(err.response.statusCode);
+    print(err.response);
   });
+
+print(data['message']);
   }
   @override
   Widget build(BuildContext context) {

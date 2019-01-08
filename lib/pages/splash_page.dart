@@ -13,11 +13,11 @@ class SplashPageState extends State<SplashPage> with AfterLayoutMixin<SplashPage
   var accessToken;
 
   _getIntances(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    accessToken = prefs.getInt('access_token');
-
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // accessToken = prefs.getString('access_token');
+  accessToken = null;
     if(accessToken == null) {
-      Navigator.of(context).pushReplacementNamed('/landingPage');
+      Navigator.of(context).pushReplacementNamed('/login');
     }else {
       // make request to check if still valid
       Navigator.of(context).pushReplacementNamed('/landingPage');
