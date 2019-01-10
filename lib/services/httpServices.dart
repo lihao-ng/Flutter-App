@@ -3,11 +3,10 @@ import './../models/Auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './prefServices.dart';
 
-final baseUrl = 'http://192.168.1.154/api/v1/';
+final baseUrl = 'http://192.168.1.156/api/v1/';
 
 httpRequest(route, params, type, success, fail) async {
   var apiUrl = baseUrl + route;
-  var response;
 
   var dio = new Dio(new Options(
       method: type,
@@ -20,33 +19,20 @@ httpRequest(route, params, type, success, fail) async {
 
   dio.interceptor.response.onError = (DioError err) async {
     if (err.response.statusCode == 405) {
-      print("in erro interceptor");
       var response = await _refreshToken(err, dio);
-      print(response);
+      
       return response;
-      // print(response.response.statusCode);
-      // if(response.statusCode != null) {
-      //   if(response.statusCode == 200) {
-      //     return response;
-      //   }
-      // }else {
-      //   return err;
-      // }
     }
 
     return err;
   };
-  print('request');
+  
   await dio.request(apiUrl, options: dio.options)
   .then((result) {
-    print(result);
     success(result);
   }, onError: (err) {
-    // print(err);
     fail(err);
   });
-
-  // return response;
 }
 
 _refreshToken(DioError err, Dio dio) async {
@@ -78,12 +64,12 @@ _refreshToken(DioError err, Dio dio) async {
       method: "POST",
       headers: headers,
       data: params,
-      responseType: ResponseType.JSON));
+      responseType: ResponseType.JSON
+  ));
 
   await refreshDio.request(refreshUrl, options: refreshDio.options)
   .then((result) async {
     if(result.statusCode == 200) {
-      print('in then refresh');
       user = Auth.fromJson(result.data);
       await storeTokens(user);
       dioOptions.headers["token-test"] = user.accessToken;
@@ -100,16 +86,14 @@ _refreshToken(DioError err, Dio dio) async {
 _reRequest(Options dioOptions) async {
   var response;
   var reRequestDio = new Dio();
-  print("in reRequest");
-  // dioOptions.method = "GET";
-  await reRequestDio.request("http://192.168.1.154/api/v1/products2", options: dioOptions)
+  
+  dioOptions.method = "GET";
+  await reRequestDio.request("http://192.168.1.156/api/v1/products2", options: dioOptions)
     .then((onValue) {
-      print(onValue);
       response = onValue;
     }, onError: (error) {
-      print('error');
       response = error;
     });
-
+  print(response);
   return response;
 }

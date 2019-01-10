@@ -51,7 +51,7 @@ class SplashPageState extends State<SplashPage> with AfterLayoutMixin<SplashPage
 
   @override
   void afterFirstLayout(BuildContext context) {
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       _getIntances(context);
     });
   }

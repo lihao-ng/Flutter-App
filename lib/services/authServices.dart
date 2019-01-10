@@ -3,8 +3,6 @@ import './httpServices.dart';
 
 login(email, password, success, fail) async {
   // SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  var response;
   final route = 'ba/login';
   final params = {
     "client_id": 2,
